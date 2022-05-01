@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class TimerLock : MonoBehaviour
 {
     [SerializeField] private float Timer;
-    private float Min, Sec;
+    private float Min = 0f, Sec = 0f;
     private  string res;
     public bool _isOverTime , _isStartTime;
 
@@ -31,7 +31,7 @@ public class TimerLock : MonoBehaviour
             _isOverTime = true;
         }
         if (_isOverTime) {
-            SceneManager.LoadScene("t_Mehrab");
+            SceneManager.LoadScene("t_mhb");
         }
     }
 }

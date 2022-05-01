@@ -8,13 +8,14 @@ public class ActionEvents : MonoBehaviour
 
     public void StartCamera(GameObject d)
     {
-        d.transform.position = Vector3.Lerp(d.transform.position,new Vector3(-1.649594f, 1.58f, 1.62f), Time.deltaTime);
+        var pivCam = GameObject.Find("camPiv").transform;
+        d.transform.position = Vector3.Lerp(d.transform.position,pivCam.position, Time.deltaTime*4);
         d.transform.rotation = Quaternion.identity;
         d.GetComponent<CameraMove>().enabled = false;
     }
     public void OpenDoor(GameObject d)
     {
-        d.transform.localPosition = Vector3.Lerp(d.transform.localPosition, new Vector3(3.519f, 7.49283f, -18.02758f), Time.deltaTime);
+        d.transform.localPosition = Vector3.Lerp(d.transform.localPosition, new Vector3(3.8f, 7.49283f, -18.02758f), Time.deltaTime);
     }
 
     public void changeCamerainPrison(GameObject cam)

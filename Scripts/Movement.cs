@@ -7,32 +7,35 @@ using System;
 public class Movement : MonoBehaviour
 {
     private Rigidbody player;
-    [SerializeField] private float Speed, SpeedRotate, SpeedJump;
-    private float _speed;
-    private bool _ismoveX, _ismoveY, _jump;
+    [SerializeField] private float   _speedx , _speedy, SpeedRotate, SpeedJump;
+    private float SpeedX, SpeedY;
+    private bool _jump;
+
     void Start()
     {
         player = GetComponent<Rigidbody>();
-        _speed = Speed;
     }
 
     private void Forward(float speed, Rigidbody player)
     {
-        player.transform.Translate(-Vector3.forward / speed);
+        //player.transform.Translate(-Vector3.forward / speed);
+        player.velocity += new Vector3(0,0, Time.deltaTime / -speed);
     }
     private void Backward(float speed, Rigidbody player)
     {
-        player.transform.Translate(Vector3.forward / speed);
+        // player.transform.Translate(Vector3.forward / speed);
+        player.velocity += Vector3.forward *Time.deltaTime / speed;
     }
     private void Left(float speed, Rigidbody player)
     {
-        player.transform.Translate(-Vector3.left / speed);
+        //player.transform.Translate(-Vector3.left / speed);
+        player.velocity += new Vector3(Time.deltaTime / -0.5f, 0, 0);
     }
     private void Right(float speed, Rigidbody player)
     {
-        player.transform.Translate(Vector3.left / speed);
+        //player.transform.Translate(Vector3.left / speed);
+        player.velocity += new Vector3(Time.deltaTime / speed, 0, 0);
     }
-
     private void Jump(float speed, Rigidbody player)
     {
         if (_jump)
@@ -41,52 +44,63 @@ public class Movement : MonoBehaviour
             player.AddForce(0, speed, 0); 
         }
     }
+
     private void movement()
     {
         #region forward_Move 
         if (Input.GetKey(KeyCode.W))
-        {
-            _ismoveY = true;
-            Forward(Speed, player);
+        {            
+            SpeedY = _speedy;
+            player.velocity = new Vector3(SpeedX, 0, SpeedY);
         }
         if (Input.GetKeyUp(KeyCode.W))
-            _ismoveY = false;
+        {           
+            SpeedY = 0;
+        }
         #endregion
         //
         #region backward_Move 
         if (Input.GetKey(KeyCode.S))
-        {
-            _ismoveY = true;
-            Backward(Speed, player);
+        {           
+            SpeedY = -_speedy;
+            player.velocity += new Vector3(SpeedX, 0, SpeedY);
         }
         if (Input.GetKeyUp(KeyCode.S))
-            _ismoveY = false;
+        {                     
+            SpeedY = 0;
+        }
         #endregion
         //
         #region left_Move 
-        //if (Input.GetKey(KeyCode.D))
-        //{
-        //    _ismoveX = true;
-        //    Left(Speed, player);
-        //}
-        //if (Input.GetKeyUp(KeyCode.D))
-        //    _ismoveX = false;
+        if (Input.GetKey(KeyCode.D))
+        {           
+            SpeedX = _speedx;            
+            player.velocity += new Vector3(SpeedX, 0, SpeedY);
+        }
+        if (Input.GetKeyUp(KeyCode.D))
+        {          
+            SpeedX = 0;
+        }
         #endregion
         //        
         #region right_Move 
-        //if (Input.GetKey(KeyCode.A))
-        //{
-        //    _ismoveX = true;
-        //    Right(Speed, player);
-        //}
-        //if (Input.GetKeyUp(KeyCode.A))
-        //    _ismoveX = false;
+        if (Input.GetKey(KeyCode.A))
+        {         
+            SpeedX = -_speedx;
+            player.velocity += new Vector3(SpeedX, 0, SpeedY);
+        }
+        if (Input.GetKeyUp(KeyCode.A))
+        {           
+            SpeedX = 0;
+        }
         #endregion
-
+        //
+        #region Jump
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump(SpeedJump, player);
         }
+        #endregion
     }
     private void Rotation()
     {       
@@ -101,15 +115,10 @@ public class Movement : MonoBehaviour
     }
 
     void Update()
-    {
-        if (_ismoveX && _ismoveY)Speed = _speed + 5;
-        
-        else Speed = _speed;
-        
-        if (Input.GetKey(KeyCode.LeftShift)) Speed = _speed - 20;
-
-        movement();
-        Rotation();
+    {     
+        if (Input.GetKey(KeyCode.LeftShift)) SpeedX = _speedx - 20;
+        movement();       
+        //Rotation();
     }
     private void OnCollisionEnter(Collision collision)
     {
