@@ -724,15 +724,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8304874379541262241, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
       propertyPath: _speedx
-      value: 0.05
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8304874379541262241, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
       propertyPath: _speedy
-      value: 0.05
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8304874379541262241, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
       propertyPath: SpeedJump
-      value: 1000
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8304874379541262241, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
+      propertyPath: _speedUper
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 8304874379541262241, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
+      propertyPath: SpeedRotate
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8304874379541262244, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
       propertyPath: m_Name
@@ -741,6 +749,10 @@ PrefabInstance:
     - target: {fileID: 8304874379541262270, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
       propertyPath: m_Mass
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8304874379541262270, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
+      propertyPath: m_Constraints
+      value: 112
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0bffe69e03b99874db4f05e9be48df96, type: 3}
