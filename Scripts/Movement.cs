@@ -6,55 +6,124 @@ using System;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
-    private Rigidbody player;
-    [SerializeField] private float _speedx , _speedUper, SpeedRotate, SpeedJump;
-    private float SpeedX;
-    private bool _jump;
-    private Vector3 MoveDir;
-
+    [SerializeField] private PlayerConstructor player;
+    [SerializeField] private float _speedx, _speedUper, SpeedJump;
+    private float SpeedX, _setAnimfloat;
+    [SerializeField]private bool _jump, _speedUping , _Heigt;    
+    private RaycastHit hit;
+    public bool aa;
     void Start()
     {
-        player = GetComponent<Rigidbody>();
+        player = PlayerConstructor.instance;
         SpeedX = _speedx;
     }
- 
-    private void Jump(float speed, Rigidbody player)
-    {
-        if (_jump)
-        {
-            _jump = false;
-            player.AddForce(0, speed, 0); 
-        }
+
+    private void Jump(float speed, Rigidbody player,Animator animator)
+    {                
+        animator.SetBool("isJumping", true);
+        player.AddForce(transform.up * speed);            
     }
 
-
+    public void DisableThis()
+    {
+        this.enabled = false;
+        player._anim.SetFloat("posX", 0);
+    }
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftShift)) _speedx = _speedUper;
-        if (Input.GetKeyUp(KeyCode.LeftShift)) _speedx = SpeedX;
-        if (Input.GetAxis("Jump") > 0)
+        #region SpeedUpper
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            _speedx = _speedUper;
+            _speedUping = true;
+        }
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _speedx = SpeedX;
+            _speedUping = false;
+        }
+        #endregion
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (_jump)
             {
-                player.AddForce(transform.up * SpeedJump);
+                Jump(SpeedJump, player._rb, player._anim);
                 _jump = false;
             }
         }
+        if (!Physics.Raycast(player._trans.position, -transform.up, out hit, .5f))
+        {
+            _Heigt = true;     
+        }
+        player._anim.SetBool("isJumping", _Heigt);
     }
-    void Move(Rigidbody Player)
+    void Move(Rigidbody Player , bool _climbing)
     {
         float hMove = Input.GetAxisRaw("Horizontal");
-        float vMove = Input.GetAxisRaw("Vertical");    
-        Vector3 movement = new Vector3(hMove, 0.0f, vMove);
-        Player.velocity = movement.normalized * _speedx + new Vector3(0.0f, Player.velocity.y, 0.0f);
+        float vMove = Input.GetAxisRaw("Vertical");
+        if (player._anim)
+        {
+            var ev = hMove != 0 || vMove != 0;
+
+            if (ev)
+            {
+                if (_speedUping)
+                {
+                    _setAnimfloat += Time.deltaTime * 2;
+                    _setAnimfloat = Mathf.Clamp(_setAnimfloat, 0, 2);
+                }
+                else
+                {
+                    if (_setAnimfloat > 1)
+                    {
+                        _setAnimfloat -= Time.deltaTime * 2;
+                        _setAnimfloat = Mathf.Clamp(_setAnimfloat, 1, 2);
+                    }
+                    else
+                    {
+                        _setAnimfloat += Time.deltaTime * 2;
+                        _setAnimfloat = Mathf.Clamp(_setAnimfloat, 0, 1);
+                    }
+                }
+            }            
+            else
+            {
+                _setAnimfloat -= Time.deltaTime*3;
+                _setAnimfloat = Mathf.Clamp(_setAnimfloat, 0, 2);
+            }
+
+            player._anim.SetFloat("posX", _setAnimfloat);
+        }
+        if (!_climbing)
+        {
+            Vector3 movement = new Vector3(hMove, 0.0f, vMove).normalized;
+            var moveforRot = movement;
+            Player.velocity = movement * _speedx + new Vector3(0.0f, Player.velocity.y, 0.0f);
+
+            if (moveforRot != Vector3.zero)
+            {
+                Quaternion newRotation = Quaternion.LookRotation(moveforRot);
+                player._trans.rotation = Quaternion.Slerp(player._trans.rotation, newRotation, Time.deltaTime * 8);
+            }
+        }
+        else
+        {
+            Vector3 movement = new Vector3(0.0f, 0.0f, vMove).normalized;
+            var moveforRot = movement;
+            Player.velocity = movement * _speedx + new Vector3(0.0f,0.0f, Player.velocity.z);
+        }
     }
     private void FixedUpdate()
     {
-        Move(player);
-       
+        Move(player._rb , aa);
     }
     private void OnCollisionEnter(Collision collision)
     {
         _jump = true;
+        _Heigt = false;
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        _Heigt = false;
     }
 }

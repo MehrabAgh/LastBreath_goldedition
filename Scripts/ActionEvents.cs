@@ -17,7 +17,6 @@ public class ActionEvents : MonoBehaviour
     {
         d.transform.localPosition = Vector3.Lerp(d.transform.localPosition, new Vector3(3.8f, 7.49283f, -18.02758f), Time.deltaTime);
     }
-
     public void changeCamerainPrison(GameObject cam)
     {
         cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, new Vector3(0.69f, 2.85f, -4.7f), Time.deltaTime /2);      

@@ -3,5 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
-{    
+{
+    public static GameManager instance;
+    
+    private void Awake()
+    {
+        instance = this;     
+    }
+
+    private void Start()
+    {
+        StartCoroutine(update(0.1f));
+    }
+
+    IEnumerator update(float time)
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(time);            
+        }
+    }
 }
